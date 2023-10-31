@@ -45,3 +45,88 @@
 		</form>
 	</div>
 </div>
+
+<script>
+	$(document).ready(function() {
+		$("#loginIdCheckBtn").on("click", function() {
+			$("#idCheckLength").addClass("d-none");
+			$("#idCheckDuplicated").addClass("d-none");
+			$("#idCheckOk").addClass("d-none");
+			
+			let loginId = $("#loginId").val().trim();
+			
+			if (loginId.length < 4) {
+				$("#idCheckLength").removeClass("d-none");
+				return;
+			}
+			
+			$.ajax({
+				type:"get"
+				, url:"/user/is-duplicated-id"
+				, data:{"loginId":loginId}
+			
+				, success:function(data) {
+					if (data.isDuplicated) {
+						$("#idCheckDuplicated").removeClass("d-none");
+					} else {
+						$("#idCheckOk").removeClass("d-none");
+					}
+				}
+				
+				, error:function(request, status, error) {
+					alert("중복확인 실패")
+				}
+			});
+		});
+		
+		$("#signUpForm").on("submit", function(e) {
+			e.preventDefault();
+			
+			let loginId = $("input[name=loginId]").val().trim();
+			let password = $("input[name=password]").val();
+			let confirmPassword = $("input[name=confirmPassword]").val();
+			let name = $("input[name=name]").val().trim();
+			let email = $("input[name=email]").val().trim();
+			
+			if(!loginId) {
+				alert("아이디를 입력하세요");
+				return false;
+			}
+			if(!password || !confirmPassword) {
+				alert("비밀번호를 입력하세요");
+				return false;
+			}
+			if(password != confirmPassword) {
+				alert("비밀번호가 일치하지 않습니다");
+				return false;
+			}
+			if(!name) {
+				alert("이름을 입력하세요");
+				return false;
+			}
+			if(!email) {
+				alert("이메일을 입력하세요");
+				return false;
+			}
+			if($("#idCheckOk").hasClass("d-none")) {
+				alsert("아이디 중복확인을 다시해주세요")
+				return false;
+			}
+			
+			let url = $(this).attr("action");
+			console.log(url);
+			let params = $(this).serialize();
+			console.log(params);
+			
+			$.post(url, params)
+			.done(function(data) {
+				if(data.code == 200) {
+					alert("가입을 환영합니다");
+					location.href = "/user/sign-in-view"
+				} else {
+					alert(data.errorMessage);
+				}
+			});
+		});
+	});
+</script>

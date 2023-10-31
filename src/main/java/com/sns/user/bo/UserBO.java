@@ -15,4 +15,20 @@ public class UserBO {
 	public UserEntity getUserEntityByLoginId(String loginId) {
 		return userRepository.findByloginId(loginId);
 	}
+	
+	public UserEntity getUserEntityByLoginIdAndPassword(String loginId, String password) {
+		return userRepository.findByLoginIdAndPassword(loginId, password);
+	}
+	
+	public Integer addUser(String loginId, String password, String name, String email) {
+		UserEntity userEntity =  userRepository.save(
+				UserEntity.builder()
+				.loginId(loginId)
+				.password(password)
+				.name(name)
+				.email(email)
+				.build());
+		
+		return userEntity == null ? null : userEntity.getId();
+	}
 }
