@@ -9,13 +9,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.sns.post.mapper.PostMapper;
-
 @Controller
 public class TestController {
 	
 	@Autowired
-	private PostMapper postMapper;
+	//private PostMapper postMapper;
 	
 	
 	// 1. String + response body -> html
@@ -46,9 +44,9 @@ public class TestController {
 	// resources/mappers xml
 	// application.yml DB 접속 정보 추가
 	// logback-spring.xml 추가(쿼리 로그) domain명 변경
-	@ResponseBody
-	@GetMapping("/test4")
-	public List<Map<String, Object>> test4() {
-		return postMapper.selectPostList();
-	}
+//	@ResponseBody
+//	@GetMapping("/test4")
+//	public List<Map<String, Object>> test4() {
+//		//return postMapper.selectPostList();
+//	}
 }

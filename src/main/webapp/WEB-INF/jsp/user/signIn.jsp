@@ -51,7 +51,7 @@
 			$.post(url, params)
 			.done(function(data) {
 				if (data.code == 200) {
-					location.href = "/post/post-list-view"
+					location.href = "/timeline/list-view"
 				} else {
 					alert(data.errorMessage);
 				}

@@ -13,5 +13,8 @@
 			<span>${userName}님 안녕하세요</span>
 			<a href="/user/sign-out" class="ml-2 text-white font-weight-bold">로그아웃</a>
 		</c:if>
+		<c:if test="${empty userName}">
+			<a href="/user/sign-in-view" class="ml-2 text-white font-weight-bold">로그인</a>
+		</c:if>
 	</div>
 </div>
