@@ -34,7 +34,7 @@
 			<div class="card border rounded mt-3">
 				<%-- 글쓴이, 더보기(삭제) --%>
 				<div class="p-2 d-flex justify-content-between">
-					<span class="font-weight-bold">post.userId</span>
+					<span class="font-weight-bold">${post.userId}</span>
 
 					<a href="#" class="more-btn">
 						<img src="https://www.iconninja.com/files/860/824/939/more-icon.png" width="30">
@@ -43,7 +43,7 @@
 
 				<%-- 카드 이미지 --%>
 				<div class="card-img">
-					<img src="https://cdn.pixabay.com/photo/2023/10/11/18/59/autumn-8309311_1280.jpg" class="w-100" alt="본문 이미지">
+					<img src="${post.imagePath}" class="w-100" alt="본문 이미지">
 				</div>
 
 				<%-- 좋아요 --%>
@@ -56,8 +56,8 @@
 
 				<%-- 글 --%>
 				<div class="card-post m-3">
-					<span class="font-weight-bold">글쓴이</span>
-					<span>글 내용</span>
+					<span class="font-weight-bold">${post.userId}</span>
+					<span>${post.content}</span>
 				</div>
 
 				<%-- 댓글 제목 --%>
@@ -81,7 +81,7 @@
 					<%-- 댓글 쓰기 --%>
 					<div class="comment-write d-flex border-top mt-2">
 						<input type="text" class="form-control border-0 mr-2 comment-input" placeholder="댓글 달기"/> 
-						<button type="button" class="comment-btn btn btn-light" data-post-id="${card.post.id}">게시</button>
+						<button type="button" class="comment-btn btn btn-light" data-post-id="${post.id}">게시</button>
 					</div>
 				</div> <%--// 댓글 목록 끝 --%>
 			</div> <%--// 카드1 끝 --%>
@@ -122,23 +122,70 @@
 		
 		
 		$("#writeBtn").on("click", function() {
-			let writeTextArea = $("#writeTextArea").val().trim();
+			let content = $("#writeTextArea").val().trim();
+			let fileName = $("#file").val();
+			
+			if (!fileName) {
+				alert("이미지를 업로드하세요");
+				return;
+			}
+			
+			let ext = fileName.split(".").pop().toLowerCase();
+			
+			if ($.inArray(ext, ['jpg', 'jpeg', 'png', 'gif']) == -1) { // 존재하면 인덱스가, 없으면 -1이 나옴
+				alert("이미지 파일만 업로드 할 수 있습니다.");
+				$("#file").val(""); // 파일을 비운다.
+				return;
+			}
+			
+			let formData = new FormData();
+			formData.append("content", content)
+			formData.append("file", $("#file")[0].files[0]);
+			
 			
 			$.ajax({
 				type:"POST"
-				, url:"/post/post-create"
-				, data:{"writeTextArea":writeTextArea}
+				, url:"/post/create"
+				, data:formData
+				, enctype:"multipart/form-data"
+				, processData:false
+				, contentType:false
 			
 				, success:function(data) {
-					
+					if (data.result == "success") {
+						alert("저장되었습니다.")
+						location.href = "/timeline/list-view"
+					}
 				}
 				, error:function(request, status, error) {
-					alert("업로드 실패")
+					alert("글 등록 에러")
 				}
 			})
 			
 		});
 		
+		$(".comment-btn").on("click", function() {
+			let content = $(this).prev().val().trim();
+			let postId = $(this).data("postId");
+			
+			$.ajax({
+				type:"post"
+				, url:"/comment/create"
+				, data:{"content"=content, "postId"=postId}
+			
+				, success:function(data) {
+					if (data.result == "success") {
+						alert("댓글 등록 성공");
+					} else {
+						alert(data.errorMessage);
+					}
+				}
+				, error:function(request, status, error) {
+					alert("댓글 등록 실패");
+				}
+			});
+			
+		});
 		
 		
 	});

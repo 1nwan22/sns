@@ -2,8 +2,6 @@ package com.sns.timeline;
 
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,9 +20,8 @@ public class TimelineController {
 	
 	// http://localhost:8080/timeline/list-view
 	@GetMapping("/list-view")
-	public String timelineListView(Model model, HttpSession session) {
+	public String timelineListView(Model model) {
 		model.addAttribute("viewName", "timeline/timeline");
-		
 		List<PostEntity> postList = postBO.getPostList();
 		model.addAttribute("postList", postList);
 		
