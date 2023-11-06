@@ -68,15 +68,17 @@
 				<%-- 댓글 목록 --%>
 				<div class="card-comment-list m-2">
 					<%-- 댓글 내용들 --%>
+					<c:forEach items="${commentList}" var="comment">
 					<div class="card-comment m-1">
-						<span class="font-weight-bold">댓글쓴이</span>
-						<span>댓글 내용</span>
+						<span class="font-weight-bold">${comment.userId}</span>
+						<span>${comment.content}</span>
 
 						<%-- 댓글 삭제 버튼 --%>
 						<a href="#" class="comment-del-btn">
 							<img src="https://www.iconninja.com/files/603/22/506/x-icon.png" width="10" height="10">
 						</a>
 					</div>
+					</c:forEach>
 
 					<%-- 댓글 쓰기 --%>
 					<div class="comment-write d-flex border-top mt-2">
@@ -155,6 +157,8 @@
 					if (data.result == "success") {
 						alert("저장되었습니다.")
 						location.href = "/timeline/list-view"
+					} else {
+						alert("글 등록 실패");
 					}
 				}
 				, error:function(request, status, error) {
@@ -166,22 +170,22 @@
 		
 		$(".comment-btn").on("click", function() {
 			let content = $(this).prev().val().trim();
-			let postId = $(this).data("postId");
+			let postId = $(this).data("post-id");
 			
 			$.ajax({
 				type:"post"
 				, url:"/comment/create"
-				, data:{"content"=content, "postId"=postId}
+				, data:{"content":content, "postId":postId}
 			
 				, success:function(data) {
 					if (data.result == "success") {
 						alert("댓글 등록 성공");
 					} else {
-						alert(data.errorMessage);
+						alert("댓글 등록 실패");
 					}
 				}
 				, error:function(request, status, error) {
-					alert("댓글 등록 실패");
+					alert("댓글 등록 에러");
 				}
 			});
 			

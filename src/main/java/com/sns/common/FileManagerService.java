@@ -12,8 +12,10 @@ import org.springframework.web.multipart.MultipartFile;
 @Component
 public class FileManagerService {
 	
-	public static final String FILE_UPLOAD_PATH = "D:\\godh22\\5_spring_project\\sns\\workspace\\images/";
+	//public static final String FILE_UPLOAD_PATH = "D:\\godh22\\5_spring_project\\sns\\workspace\\images/";
 	
+	public static final String FILE_UPLOAD_PATH = "C:\\Salt\\coading\\5_spring_project\\sns\\workspace\\images/";
+			
 	public String saveFile(String loginId, MultipartFile file) {
 		
 		String directoryName = loginId + "_" + System.currentTimeMillis();
