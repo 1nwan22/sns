@@ -25,11 +25,16 @@ public class CommentRestController {
 			@RequestParam("content") String content,
 			@RequestParam("postId") int postId,
 			HttpSession session) {
-		int userId = (int) session.getAttribute("userId");
+		Integer userId = (Integer) session.getAttribute("userId");
 		
 		commentBO.addComment(postId, userId, content);
 		
 		Map<String, Object> result = new HashMap<>();
+		if (userId == null) {
+			result.put("code", 500);
+			result.put("errorMessage", "댓글 등록 실패, 로그인하세요");
+			return result;
+		}
 		result.put("code", 200);
 		result.put("result", "success");
 		

@@ -16,6 +16,20 @@
 			`comment`
 	</select>
 	
+	<select id="selectCommentListByPostId" parameterType="int">
+		SELECT
+			`id`
+			,`postId`
+			,`userId`
+			,`content`
+			,`createdAt`
+			,`updatedAt`
+		FROM
+			`comment`
+		WHERE
+			`postId` = #{postId}
+	</select>
+	
 	<insert id="insertComment" parameterType="map">
 		INSERT INTO `comment`
 		(

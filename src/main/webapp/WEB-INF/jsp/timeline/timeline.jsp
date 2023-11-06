@@ -28,13 +28,13 @@
 		</c:if>
 
 		<%-- 타임라인 영역 --%>
-		<c:forEach items="${postList}" var="post">
+		<c:forEach items="${cardList}" var="card">
 		<div class="timeline-box my-5">
 			<%-- 카드1 --%>
 			<div class="card border rounded mt-3">
 				<%-- 글쓴이, 더보기(삭제) --%>
 				<div class="p-2 d-flex justify-content-between">
-					<span class="font-weight-bold">${post.userId}</span>
+					<span class="font-weight-bold">${card.user.loginId}</span>
 
 					<a href="#" class="more-btn">
 						<img src="https://www.iconninja.com/files/860/824/939/more-icon.png" width="30">
@@ -43,7 +43,7 @@
 
 				<%-- 카드 이미지 --%>
 				<div class="card-img">
-					<img src="${post.imagePath}" class="w-100" alt="본문 이미지">
+					<img src="${card.post.imagePath}" class="w-100" alt="본문 이미지">
 				</div>
 
 				<%-- 좋아요 --%>
@@ -56,8 +56,8 @@
 
 				<%-- 글 --%>
 				<div class="card-post m-3">
-					<span class="font-weight-bold">${post.userId}</span>
-					<span>${post.content}</span>
+					<span class="font-weight-bold">${card.user.loginId}</span>
+					<span>${card.post.content}</span>
 				</div>
 
 				<%-- 댓글 제목 --%>
@@ -68,10 +68,10 @@
 				<%-- 댓글 목록 --%>
 				<div class="card-comment-list m-2">
 					<%-- 댓글 내용들 --%>
-					<c:forEach items="${commentList}" var="comment">
+					<c:forEach items="${card.commentList}" var="commentView">
 					<div class="card-comment m-1">
-						<span class="font-weight-bold">${comment.userId}</span>
-						<span>${comment.content}</span>
+							<span class="font-weight-bold">${commentView.user.loginId}</span>
+							<span>${commentView.comment.content}</span>
 
 						<%-- 댓글 삭제 버튼 --%>
 						<a href="#" class="comment-del-btn">
@@ -79,11 +79,11 @@
 						</a>
 					</div>
 					</c:forEach>
-
+					
 					<%-- 댓글 쓰기 --%>
 					<div class="comment-write d-flex border-top mt-2">
 						<input type="text" class="form-control border-0 mr-2 comment-input" placeholder="댓글 달기"/> 
-						<button type="button" class="comment-btn btn btn-light" data-post-id="${post.id}">게시</button>
+						<button type="button" class="comment-btn btn btn-light" data-post-id="${card.post.id}">게시</button>
 					</div>
 				</div> <%--// 댓글 목록 끝 --%>
 			</div> <%--// 카드1 끝 --%>
@@ -155,8 +155,8 @@
 			
 				, success:function(data) {
 					if (data.result == "success") {
-						alert("저장되었습니다.")
-						location.href = "/timeline/list-view"
+						alert("저장되었습니다.");
+						location.href = "/timeline/list-view";
 					} else {
 						alert("글 등록 실패");
 					}
@@ -169,8 +169,15 @@
 		});
 		
 		$(".comment-btn").on("click", function() {
-			let content = $(this).prev().val().trim();
 			let postId = $(this).data("post-id");
+			
+			// 댓글 내용 가져오기
+			// 1)
+			//let content = $(this).siblings("input").val().trim();
+		
+			// 2)
+			let content = $(this).prev().val().trim();
+			
 			
 			$.ajax({
 				type:"post"
@@ -179,9 +186,10 @@
 			
 				, success:function(data) {
 					if (data.result == "success") {
-						alert("댓글 등록 성공");
-					} else {
-						alert("댓글 등록 실패");
+						//history.scrollRestoration = "auto";
+						location.reload(true);
+					} else if (data.code == 500) {
+						alert(data.errorMessage);
 					}
 				}
 				, error:function(request, status, error) {
