@@ -53,5 +53,9 @@ public class CommentBO {
 	public void addComment(int postId, int userId, String content) {
 		commentMapper.insertComment(postId, userId, content);
 	}
+	
+	public void deleteCommentById(int id) {
+		commentMapper.deleteCommentById(id);
+	}
 
 }

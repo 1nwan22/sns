@@ -18,4 +18,6 @@ public interface CommentMapper {
 			@Param("postId") int postId, 
 			@Param("userId") int userId, 
 			@Param("content") String content);
+	
+	public void deleteCommentById(int id);
 }
