@@ -37,7 +37,7 @@
 					<div class="p-2 d-flex justify-content-between">
 					<c:if test="${userId eq card.post.userId}">
 						<span class="font-weight-bold">${card.user.loginId}</span> <a
-							href="#" class="more-btn"> <img
+							href="#none" class="more-btn"> <img
 							src="https://www.iconninja.com/files/860/824/939/more-icon.png"
 							width="30">
 						</a>
@@ -268,6 +268,10 @@
 				}
 			
 			});
+		});
+		
+		$(".more-btn").on("click", function() {
+			
 		});
 			
 		

@@ -39,7 +39,7 @@ public class CommentRestController {
 		Map<String, Object> result = new HashMap<>();
 		if (userId == null) {
 			result.put("code", 500);
-			result.put("errorMessage", "댓글 등록 실패, 로그인하세요");
+			result.put("errorMessage", "로그인 후에 이용 가능합니다");
 			return result;
 		}
 		result.put("code", 200);

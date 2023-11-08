@@ -30,7 +30,7 @@ public class LikeRestController {
 		
 		if(userId == null) {
 			result.put("code", 500);
-			result.put("errorMessage", "로그인 되지 않은 사용자 입니다.");
+			result.put("errorMessage", "로그인 후에 이용 가능합니다.");
 			return result;
 		}
 		
