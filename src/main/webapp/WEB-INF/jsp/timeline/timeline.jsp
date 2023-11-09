@@ -35,13 +35,13 @@
 				<div class="card border rounded mt-3">
 					<%-- 글쓴이, 더보기(삭제) --%>
 					<div class="p-2 d-flex justify-content-between">
-					<c:if test="${userId eq card.post.userId}">
-						<span class="font-weight-bold">${card.user.loginId}</span> <a
-							href="#none" class="more-btn"> <img
-							src="https://www.iconninja.com/files/860/824/939/more-icon.png"
-							width="30">
+						<span class="font-weight-bold">${card.user.loginId}</span> 
+						<!-- 더보기(내가 쓴 글일 때만 노출 - 삭제 또는 수정) -->
+						<c:if test="${userId eq card.post.userId}">
+						<a href="#none" class="more-btn" data-toggle="modal" data-target="#modal" data-post-id="${card.post.id}"> 
+							<img src="https://www.iconninja.com/files/860/824/939/more-icon.png" width="30">
 						</a>
-					</c:if>
+						</c:if>
 					</div>
 
 					<%-- 카드 이미지 --%>
@@ -90,7 +90,8 @@
 								<!-- 로그인 된 사람과 댓글쓴이 일치 시 삭제 버튼 노출 -->
 								<c:if test="${userId eq commentView.user.id}">
 									<a href="#" class="comment-del-btn"
-										data-comment-id="${commentView.comment.id}"> <img
+										data-comment-id="${commentView.comment.id}"> 
+										<img
 										src="https://www.iconninja.com/files/603/22/506/x-icon.png"
 										width="10" height="10">
 									</a>
@@ -115,6 +116,21 @@
 		</c:forEach>
 	</div>
 	<%--// contents-box 끝  --%>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modal">
+	<!-- modal-sm:작은 모달 modal-dialog-centered: 수직 기준 가운데 -->
+ 	<div class="modal-dialog modal-dialog-centered modal-sm">
+		<div class="modal-content text-center">
+	    	<div class="py-3 border-bottom">
+	    		<a href="#none" id="deletePost">삭제하기</a>
+	    	</div>
+	    	<div class="py-3">
+	    		<a href="#none" data-dismiss="modal">취소하기</a>
+	    	</div>
+		</div>
+	</div>
 </div>
 
 <script>
@@ -270,11 +286,43 @@
 			});
 		});
 		
+			
+		// 글 삭제(... 더보기 버튼 클릭) => 모달 띄우기 => 모달에 글번호 세팅
 		$(".more-btn").on("click", function() {
+			// e.preventDefault(); // a 태그 올라가는 현상 방지
+			
+			let postId = $(this).data("post-id"); // ... 버튼에 넣어둔 글 번호
+			
+			// 1개인 모달 태그에 재활용. data-post-id를 심어줌
+			$("#modal").data("post-id", postId); // 모달 태그에 setting
 			
 		});
-			
 		
+		// 모달 안에 있는 삭제하기 클릭 => 진짜 삭제
+		
+		$("#modal #deletePost").on("click", function() {
+			
+			let postId = $("#modal").data("post-id"); // getting
+			alert(postId);
+			
+			// ajax 글 삭제 요청
+			$.ajax({
+				type:"DELETE"
+				, url:"/post/delete"
+				, data:{"postId":postId}
+			
+				, success:function(data) {
+					if (data.code == 200) {
+						alert("삭제 성공");
+						location.reload(true);
+					}
+				}
+				, error:function(request, status, error) {
+					alert("삭제에 실패했습니다.")
+				}
+				
+			});
+		});
 		
 	});
 </script>

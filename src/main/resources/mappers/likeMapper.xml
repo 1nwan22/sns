@@ -64,8 +64,9 @@
 			`like`
 		WHERE
 			`postId` = #{postId}
-		AND
-			`userId` = #{userId}
+			<if test=" userId != null">
+			AND `userId` = #{userId}
+			</if>
 	</delete>
 	
 </mapper>

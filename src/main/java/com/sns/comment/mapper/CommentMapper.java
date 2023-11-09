@@ -20,4 +20,6 @@ public interface CommentMapper {
 			@Param("content") String content);
 	
 	public void deleteCommentById(int id);
+	
+	public void deleteCommentListByPostId(int postId);
 }
